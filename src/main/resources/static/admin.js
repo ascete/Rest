@@ -1,18 +1,14 @@
-let roleList = []; // глобальная переменная для хранения массива ролей
-
-//вызов метода получения всех юзеров и заполнения таблицы
+let roleList = [];
 getAllUsers();
 
 function getAllUsers() {
-    $.getJSON("http://localhost:8181/admin/allUsers", function (data) { // по ссылки получаем юзеров и добавляем их в дата
-        console.log('1) данные с бэка /allUsers: ', JSON.stringify(data)) // для проверки в консоли
+    $.getJSON("http://localhost:8181/admin/allUsers", function (data) {
+        console.log('1) данные с бэка /allUsers: ', JSON.stringify(data))
         let rows = '';
-        $.each(data, function (key, user) { // проходимся по юзерам (получаем юзар)
-            rows += createRows(user); // из цикла полученного юзера добавляем в строку
+        $.each(data, function (key, user) {
+            rows += createRows(user);
         });
-        $('#tableAllUsers').append(rows); //строку добавляем в таблицу
-
-        // получение ролей по url из json, добовляем в массив ролей
+        $('#tableAllUsers').append(rows);
         $.ajax({
             url: '/admin/authorities',
             method: 'GET',
@@ -24,7 +20,6 @@ function getAllUsers() {
     });
 }
 
-//метод создания строк для таблицы
 function createRows(user) {
 
     let user_data = '<tr id=' + user.id + '>';
@@ -34,7 +29,7 @@ function createRows(user) {
     user_data += '<td>' + user.phoneNumber + '</td>';
     user_data += '<td>' + user.email + '</td>';
     user_data += '<td>';
-    let roles = user.authorities; // через getJSON получаем массив ролей
+    let roles = user.authorities;
     for (let role of roles) {
         user_data += role.name.replace('ROLE_', '') + ' ';
     }
@@ -42,7 +37,6 @@ function createRows(user) {
         '<td>' + '<input id="btnEdit" value="Edit" type="button" ' +
         'class="btn-info btn edit-btn" data-toggle="modal" data-target="#editModal" ' +
         'data-id="' + user.id + '">' + '</td>' +
-
         '<td>' + '<input id="btnDelete" value="Delete" type="button" class="btn btn-danger del-btn" ' +
         'data-toggle="modal" data-target="#deleteModal" data-id=" ' + user.id + ' ">' + '</td>';
     user_data += '</tr>';
@@ -50,7 +44,6 @@ function createRows(user) {
     return user_data;
 }
 
-// получаем все роли для изменения юзера (модалка)
 function getUserRolesForEdit() {
     var allRoles = [];
     $.each($("select[name='editRoles'] option:selected"), function () {
@@ -60,12 +53,9 @@ function getUserRolesForEdit() {
         allRoles.push(role);
         console.log("role: " + JSON.stringify(role));
     });
-    // console.log("allRoles: " + JSON.stringify(allRoles));
     return allRoles;
 }
 
-//Edit user
-//при нажатие на кнопку Edit открвается заполненное модальное окно
 $(document).on('click', '.edit-btn', function () {
     const user_id = $(this).attr('data-id');
     console.log("editUserId: " + JSON.stringify(user_id));
@@ -81,18 +71,15 @@ $(document).on('click', '.edit-btn', function () {
             $('#editEmail').val(user.email);
             $('#editPassword').val(user.password);
             $('#editRole').empty();
-            //для получения ролей в мадольном окне проходимся по массиву ролей, выделяем текущею роль у юзера
             roleList.map(role => {
-                let flag = user.authorities.find(item => item.id === role.id) ? 'selected' : ''; //flag - для отметки текущей роль юзера, selected - выбрано
+                let flag = user.authorities.find(item => item.id === role.id) ? 'selected' : '';
                 $('#editRole').append('<option id="' + role.id + '" ' + flag + ' name="' + role.name + '" >' +
                     role.name.replace('ROLE_', '') + '</option>')
             })
-            // $('#editModal').modal('show'); //модальное окно открывается и без этой записи
         }
     });
 });
 
-//Отправка изменений модального окна
 $('#editButton').on('click', (e) => {
     e.preventDefault();
 
@@ -108,17 +95,17 @@ $('#editButton').on('click', (e) => {
         roles: getUserRolesForEdit()
 
     }
-    // console.log("editUser:" + JSON.stringify(editUser));
+
     $.ajax({
         url: '/admin',
         method: 'PUT',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify(editUser),
-        success: (data) => { // data - ответ с кнтроллера на бэкэнде
-            let newRow = createRows(data); // создаем новую строку
+        success: (data) => {
+            let newRow = createRows(data);
             console.log("newRow: " + newRow)
-            $('#tableAllUsers').find('#' + userEditId).replaceWith(newRow); // в таблице по айди находим строку, которую изменяем и заменяем ее на новую
+            $('#tableAllUsers').find('#' + userEditId).replaceWith(newRow);
             $('#editModal').modal('hide');
             $('#admin-tab').tab('show');
         },
@@ -128,11 +115,9 @@ $('#editButton').on('click', (e) => {
     });
 });
 
-//Delete user
-//при нажатие на кнопку Delete открвается заполненное модальное окно
 $(document).on('click', '.del-btn', function () {
 
-    let user_id = $(this).attr('data-id'); // получаю айди юзера у которого нажата кнопка delete
+    let user_id = $(this).attr('data-id');
     console.log("userId: " + JSON.stringify(user_id));
 
     $.ajax({
@@ -147,9 +132,8 @@ $(document).on('click', '.del-btn', function () {
             $('#delEmail').empty().val(user.email);
             $('#delPassword').empty().val(user.password);
             $('#delRole').empty();
-            //для получения ролей в мадольном окне проходимся по массиву ролей, выделяем текущею роль у юзера
             roleList.map(role => {
-                let flag = user.authorities.find(item => item.id === role.id) ? 'selected' : ''; //flag - для отметки текущей роль юзера, selected - выбрано
+                let flag = user.authorities.find(item => item.id === role.id) ? 'selected' : '';
                 $('#delRole').append('<option id="' + role.id + '" ' + flag + ' name="' + role.name + '" >' +
                     role.name.replace('ROLE_', '') + '</option>')
             })
@@ -157,7 +141,6 @@ $(document).on('click', '.del-btn', function () {
     });
 });
 
-//удаляет юзера при нажатие на кнопку delete в модальном окне
 $('#deleteButton').on('click', (e) => {
     e.preventDefault();
     let userId = $('#delId').val();
@@ -165,9 +148,9 @@ $('#deleteButton').on('click', (e) => {
         url: '/admin/' + userId,
         method: 'DELETE',
         success: function () {
-            $('#' + userId).remove(); // удаляет юзера по айди
-            $('#deleteModal').modal('hide'); // hide - скрывает модальное окно
-            $('#admin-tab').tab('show'); // показать таблицу
+            $('#' + userId).remove();
+            $('#deleteModal').modal('hide');
+            $('#admin-tab').tab('show');
         },
         error: () => {
             console.log("error delete user")
@@ -175,7 +158,6 @@ $('#deleteButton').on('click', (e) => {
     });
 });
 
-// получаем все роли для добавления юзера (вкладка добавить)
 function getUserRolesForAdd() {
     var allRoles = [];
     $.each($("select[name='addRoles'] option:selected"), function () {
@@ -185,14 +167,10 @@ function getUserRolesForAdd() {
         allRoles.push(role);
         console.log("role: " + JSON.stringify(role));
     });
-    // console.log("allRoles: " + JSON.stringify(allRoles));
     return allRoles;
 }
 
-//Add New User
-//при нажатие на владку new user открывается вкладка для добавления юзера
 $('.newUser').on('click', () => {
-
     $('#name').empty().val('')
     $('#lastName').empty().val('')
     $('#phoneNumber').empty().val('')
@@ -203,13 +181,9 @@ $('.newUser').on('click', () => {
         $('#addRole').append('<option id="' + role.id + '" name="' + role.name + '">' +
             role.name.replace('ROLE_', '') + '</option>')
     })
-    // alert("in tab new user")
 })
 
-//отправляет заполненную форму с новым юзером, юзер добавляется
 $("#addNewUserButton").on('click', () => {
-    // e.preventDefault(); //Если будет вызван данный метод, то действие события по умолчанию не будет выполнено
-    // alert('check: кнопка #addNewUserButton')
     let newUser = {
         username: $('#name').val(),
         lastName: $('#lastName').val(),
@@ -218,7 +192,6 @@ $("#addNewUserButton").on('click', () => {
         password: $('#password').val(),
         roles: getUserRolesForAdd()
     }
-    // alert('new user:' + JSON.stringify(newUser));
 
     $.ajax({
         url: 'http://localhost:8181/admin',
@@ -227,7 +200,6 @@ $("#addNewUserButton").on('click', () => {
         data: JSON.stringify(newUser),
         contentType: 'application/json; charset=utf-8',
         success: function () {
-            // alert("add user in success")
             $('#tableAllUsers').empty();
             getAllUsers();
             $('#admin-tab').tab('show');
