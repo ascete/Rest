@@ -1,6 +1,8 @@
 package com.example.rest.controller;
 
 
+
+
 import com.example.rest.model.Role;
 import com.example.rest.model.User;
 import com.example.rest.service.RoleService;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
-@RequestMapping
+@RequestMapping(value = "/")
 public class UserRestController {
 
     private final UserService userService;
@@ -57,7 +60,6 @@ public class UserRestController {
 
     @DeleteMapping("admin/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable long id) {
-//        if (userService.existsUserById(id)) {
         userService.deleteUserById(id);//
         return new ResponseEntity<>(HttpStatus.OK);
     }

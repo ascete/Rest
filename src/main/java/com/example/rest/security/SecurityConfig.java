@@ -3,6 +3,7 @@ package com.example.rest.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,30 +24,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //Защита CSRF включена по умолчанию в конфигурации Java. Мы все еще можем отключить его, если нам нужно.
-        //http.csrf().disable();
         http.authorizeRequests()
-//                .antMatchers("/login", "/logout").permitAll() // доступность всем
-                .antMatchers("/user/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')") // разрешаем входить на /user пользователям с ролью User, Admin
-                .antMatchers("/**").access("hasAnyRole('ROLE_ADMIN')") // разрешает входить на /admin пользователю с ролью Admin
+                .antMatchers("/", "/login", "/logout").permitAll()
+                .antMatchers("/user/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')")
                 .and()
-                .formLogin()  // Spring сам подставит свою логин форму
-//                .loginProcessingUrl("/j_spring_security_check")
-                .loginPage("/login")
-//                .defaultSuccessUrl("/user", true)
-//                .failureUrl("/login?error=true")
-                .usernameParameter("email")
-//                .passwordParameter("password")
-                .successHandler(loginSuccessHandler)// подключаем наш SuccessHandler для перенеправления по ролям
-                .permitAll()
+                .formLogin()
+                .successHandler(loginSuccessHandler)
                 .and().logout()
-                .logoutUrl("/logout") //URL-адрес, запускающий выход из системы (по умолчанию "/ logout").
-                .logoutSuccessUrl("/login") //URL-адрес для перенаправления после выхода из системы.
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
                 .and().csrf().disable();
     }
 

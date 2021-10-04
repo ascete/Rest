@@ -4,7 +4,7 @@ let roleList = []; // глобальная переменная для хран�
 getAllUsers();
 
 function getAllUsers() {
-    $.getJSON("http://localhost:8080/admin/allUsers", function (data) { // по ссылки получаем юзеров и добавляем их в дата
+    $.getJSON("http://localhost:8181/admin/allUsers", function (data) { // по ссылки получаем юзеров и добавляем их в дата
         console.log('1) данные с бэка /allUsers: ', JSON.stringify(data)) // для проверки в консоли
         let rows = '';
         $.each(data, function (key, user) { // проходимся по юзерам (получаем юзар)
@@ -221,7 +221,7 @@ $("#addNewUserButton").on('click', () => {
     // alert('new user:' + JSON.stringify(newUser));
 
     $.ajax({
-        url: 'http://localhost:8080/admin',
+        url: 'http://localhost:8181/admin',
         method: 'POST',
         dataType: 'json',
         data: JSON.stringify(newUser),

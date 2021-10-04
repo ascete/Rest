@@ -10,7 +10,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<!--Верхняя панель-->
+
 <div class="container-fluid">
     <nav class="navbar navbar-dark bg-dark">
         <span class="navbar-brand"
@@ -22,8 +22,6 @@
         </ul>
     </nav>
 </div>
-
-<!--Боковая панель-->
 <div class="container-fluid">
     <div class="row">
         <div class="col bg-white">
@@ -36,7 +34,6 @@
                 </li>
             </ul>
         </div>
-        <!--           Пустые вкалдки-->
         <div class="col-10 bg-light">
             <div><h2>Admin panel</h2></div>
             <ul class="nav nav-tabs">
@@ -51,14 +48,13 @@
             </ul>
 
             <div class="tab-content">
-                <!--                Вкладка All users-->
                 <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">
                     <div><h5 class="card-header">All users</h5></div>
                     <table class="table table-striped" id="tableAdmin">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">First Name</th>
+                            <th scope="col">Name</th>
                             <th scope="col">Last Name</th>
                             <th scope="col">Phone Number</th>
                             <th scope="col">Email</th>
@@ -68,13 +64,8 @@
                         </tr>
                         </thead>
                         <tbody id="tableAllUsers">
-
-                        <!--                        тут js-->
-
                         </tbody>
                     </table>
-
-                    <!--                            Заполнение модального окна Edit user-->
                     <div class="modal" id="editModal" aria-hidden="true"
                          role="dialog" aria-labelledby="editModalLabel">
                         <div class="modal-dialog">
@@ -90,10 +81,10 @@
                                         <div class="row justify-content-center align-items-center">
                                             <form class="text-center" method="post" id="editUserForm">
                                                 <div class="form-group font-weight-bold">
-                                                    <label for="id">ID</label>
+                                                    <label for="editId">ID</label>
                                                     <input type="number" class="form-control" id="editId"
                                                            name="id" readonly>
-                                                    <label for="editName">First name</label>
+                                                    <label for="editName">Name</label>
                                                     <input type="text" class="form-control" id="editName"
                                                            name="username">
                                                     <label for="editLastName">Last name</label>
@@ -108,7 +99,6 @@
                                                     <label for="editPassword">Password</label>
                                                     <input type="password" class="form-control"
                                                            id="editPassword" name="password" autocomplete="on">
-
                                                     <label for="editRole">Role</label>
                                                     <select multiple class="form-select w-100" size="2"
                                                             id="editRole" name="editRoles">
@@ -126,8 +116,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--                            Заполнение модального окна Delete user-->
                     <div class="modal fade" id="deleteModal" aria-hidden="true"
                          role="dialog" aria-labelledby="deleteModalLabel">
                         <div class="modal-dialog">
@@ -147,7 +135,7 @@
                                                     <label for="delId">ID</label>
                                                     <input type="number" class="form-control" id="delId"
                                                            name="id" readonly>
-                                                    <label for="delName">First name</label>
+                                                    <label for="delName">Name</label>
                                                     <input type="text" class="form-control" id="delName"
                                                            name="username" readonly>
                                                     <label for="delLastName">Last name</label>
@@ -180,12 +168,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--                                            </tr>-->
-                    <!--                                            </tbody>-->
-                    <!--                                        </table>-->
                 </div>
-
-                <!--               Вкладка Add new user-->
                 <div class="tab-pane fade" id="new" role="tabpanel" aria-labelledby="new-tab">
                     <h5 class="card-header">Add new user</h5>
                     <div class="row justify-content-center align-items-center">
@@ -193,7 +176,7 @@
                             <div class="form-group font-weight-bold">
                                 <label for="name">First name</label>
                                 <input type="text" class="form-control" id="name" name="username"
-                                       placeholder="First name">
+                                       placeholder="Name">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control" id="lastName" name="lastName"
                                        placeholder="Last name">
@@ -219,13 +202,9 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"-->
-<!--        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"-->
-<!--        crossorigin="anonymous"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
         crossorigin="anonymous"></script>
-<!--<script src="webjars/jquery/3.3.1/jquery.min.js"></script>-->
-<script src="/static/users.js"></script>
+<script src="admin.js"></script>
 </body>
 </html>
